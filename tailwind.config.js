@@ -13,7 +13,10 @@ export default {
           'claro': '#D6D6D6'
         },
         'branco': '#FFF',
-        'azul': '#1669B6'
+        'azul': '#1669B6',
+        'verde': '#00CE3A',
+        'vermelho': '#D20808',
+        'amarelo': '#EBFF00'
       }
     },
   },
