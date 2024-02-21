@@ -3,11 +3,21 @@ import logoMaua from '../../assets/LogoMaua.png'
 import { FaSearch, FaCheckCircle } from 'react-icons/fa'
 import { GoXCircleFill } from "react-icons/go";
 import { RiRefreshFill } from "react-icons/ri";
-import { useState } from 'react'
+import { useContext, useEffect, useState } from 'react'
+import { EmployeeContext } from '../../context/employee_context';
+import { useNavigate } from 'react-router-dom';
 
 export default function Retirada(){
     const [modal, setModal] = useState(false)
-    
+
+    const { isLogged } = useContext(EmployeeContext)
+    const navigate = useNavigate()
+
+    useEffect(() => {
+        const token = localStorage.getItem('token')
+
+        if(!isLogged && !token) navigate('/')
+    }, [])
     const json = [
         {
             "serie": "12345",
@@ -80,8 +90,8 @@ export default function Retirada(){
                             </tr>
                         </thead>
                         <tbody>
-                            {json.map((cell) => (
-                            <tr>
+                            {json.map((cell, index) => (
+                            <tr key={index}>
                                 <td>
                                     <div className='rounded-lg m-2 p-4 bg-cinza-claro text-center text-lg font-bold underline'>
                                         {cell.serie}

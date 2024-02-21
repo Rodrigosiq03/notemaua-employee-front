@@ -1,9 +1,26 @@
 import logo from '../../assets/LogoNote.svg'
 import logoMaua from '../../assets/LogoMaua.png'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { IoExitOutline } from 'react-icons/io5'
+import { useContext, useState } from 'react'
+import { EmployeeContext } from '../../context/employee_context'
 
 export default function EsqueciSenha(){
+    const [email, setEmail] = useState('')
+
+    const { forgotPassword } = useContext(EmployeeContext)
+    const navigate = useNavigate()
+
+    const handleForgotPassword = async (e: React.FormEvent<HTMLFormElement>) => {
+        e.preventDefault()
+        const resp = await forgotPassword(email)
+
+        if (resp !== '') {
+            navigate('/RedefinirSenha')
+        }
+        // TOAST DE SUCESSO
+    }
+
     return(
         <>
             <section className='h-screen bg-azul-claro flex flex-col'>
@@ -19,16 +36,16 @@ export default function EsqueciSenha(){
                             <p className='w-1/2 text-xl'>Você receberá um e-mail para redefinir sua senha.</p>
                         </div>
 
-                        <form>
+                        <form onSubmit={handleForgotPassword}>
                             <div className='flex flex-col gap-4'>
                                 <div className='flex flex-col gap-1'>
                                     <label className='px-2 font-semibold' htmlFor="">E-mail (@maua.br)</label>
-                                    <input className='bg-cinza-claro shadow-2xl p-2 rounded-xl' type="email" />
+                                    <input onChange={(e) => setEmail(e.target.value)} className='bg-cinza-claro shadow-2xl p-2 rounded-xl' type="email" />
                                 </div>
 
                             </div>
                             <div className='flex justify-center my-4'>
-                                <button className='bg-azul text-branco text-xl font-bold px-12 py-1 rounded-md'>Enviar</button>
+                                <button type='submit' className='bg-azul text-branco text-xl font-bold px-12 py-1 rounded-md'>Enviar</button>
                             </div>
                         </form>
 
