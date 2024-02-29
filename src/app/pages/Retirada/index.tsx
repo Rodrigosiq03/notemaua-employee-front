@@ -18,6 +18,7 @@ export default function Retirada(){
 
         if(!isLogged && !token) navigate('/')
     }, [])
+
     const json = [
         {
             "serie": "12345",

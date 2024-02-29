@@ -9,12 +9,12 @@ export default function RedefinirSenha(){
         <>
             <section className='h-screen bg-azul-claro flex flex-col'>
                 <div className="flex justify-center items-center h-[90%]">
-                    <div className="flex flex-col justify-center py-4 px-12 bg-branco border-[12px] border-cinza-escuro rounded-3xl w-[30%] h-[70%]">
+                    <div className="flex flex-col justify-center p-12 bg-branco border-[12px] border-cinza-escuro rounded-3xl w-[30%]">
                         <div className='flex justify-center'>
                             <img src={logo} alt="Logo da NoteMaua" />
                         </div>
                         
-                        <h2 className='text-3xl font-bold text-center my-8'>Redefinir Senha</h2>
+                        <h2 className='text-2xl font-bold text-center my-8'>Redefinir Senha</h2>
 
                         <form>
                             <div className='flex flex-col gap-4'>
