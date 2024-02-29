@@ -25,15 +25,15 @@ export default function EsqueciSenha(){
         <>
             <section className='h-screen bg-azul-claro flex flex-col'>
                 <div className="flex justify-center items-center h-[90%]">
-                    <div className="flex flex-col justify-center py-4 px-12 bg-branco border-[12px] border-cinza-escuro rounded-3xl w-[30%] h-[70%]">
+                    <div className="flex flex-col justify-center py-4 px-12 bg-branco border-[12px] border-cinza-escuro rounded-3xl w-[30%] min-h-[70%]">
                         <div className='flex justify-center'>
                             <img src={logo} alt="Logo da NoteMaua" />
                         </div>
                         
-                        <h2 className='text-3xl font-bold text-center my-8'>Esqueci minha Senha</h2>
+                        <h2 className='text-2xl font-bold text-center my-8'>Esqueci minha Senha</h2>
                         
                         <div className='flex justify-center mb-8'>
-                            <p className='w-1/2 text-xl'>Você receberá um e-mail para redefinir sua senha.</p>
+                            <p className='text-center text-lg'>Você receberá um e-mail para redefinir sua senha.</p>
                         </div>
 
                         <form onSubmit={handleForgotPassword}>

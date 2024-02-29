@@ -3,6 +3,8 @@ import logoMaua from '../../assets/LogoMaua.png'
 import { Link, useNavigate } from 'react-router-dom'
 import React, { useContext, useState } from 'react'
 import { EmployeeContext } from '../../context/employee_context'
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 export default function Login(){
     const [email, setEmail] = useState('')
@@ -14,19 +16,42 @@ export default function Login(){
 
     async function handleLogin(e: React.FormEvent<HTMLFormElement>){
         e.preventDefault()
+        if(email === '' || password === '') {
+            toast.error("Preencha todos os campos", {
+                position: "top-center",
+                autoClose: 3000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: "light"
+            });
+            return
+        }
         const token = await login(email, password)
         if (token) {
             setIsLogged(true)
             navigate('/Retirada')
         }
-        // TOAST DE ERRO!!!!
+        toast.error("Email ou Senha Inválidos", {
+            position: "top-center",
+            autoClose: 3000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "light"
+        });
     }
 
     return(
         <>
             <section className='h-screen bg-azul-claro flex flex-col'>
+            <ToastContainer position="top-center" autoClose={3000} hideProgressBar={false} newestOnTop={false} closeOnClick rtl={false} pauseOnFocusLoss draggable pauseOnHover theme="light" />
                 <div className="flex justify-center items-center h-[90%]">
-                    <div className="flex flex-col justify-center py-4 px-12 bg-branco border-[12px] border-cinza-escuro rounded-3xl w-[30%] h-[70%]">
+                    <div className="flex flex-col justify-center p-12 bg-branco border-[12px] border-cinza-escuro rounded-3xl w-[30%]">
                         <div className='flex justify-center'>
                             <img src={logo} alt="Logo da NoteMaua" />
                         </div>
