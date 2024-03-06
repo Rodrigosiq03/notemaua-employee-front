@@ -48,23 +48,24 @@ export default function Login(){
                 theme: "light"
             });
             setTimeout(() => {
-                navigate('/Retirada')
+                navigate('/Withdraw')
             }, 3000)
+        }else{
+            toast.error("Email ou Senha Inválidos", {
+                position: "top-center",
+                autoClose: 3000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: "light"
+            });
         }
-        toast.error("Email ou Senha Inválidos", {
-            position: "top-center",
-            autoClose: 3000,
-            hideProgressBar: false,
-            closeOnClick: true,
-            pauseOnHover: true,
-            draggable: true,
-            progress: undefined,
-            theme: "light"
-        });
     }
 
     useEffect(() => {
-        if(localStorage.getItem('token')) navigate('/Retirada')
+        if(localStorage.getItem('token')) navigate('/Withdraw')
     }, [])
 
     return(
@@ -102,7 +103,7 @@ export default function Login(){
                         </form>
 
                         <div className='text-center'>
-                            <Link to={'/EsqueciSenha'} className='py-4 font-bold text-azul hover:underline'>Esqueci minha Senha</Link>
+                            <Link to={'/ForgotPassword'} className='py-4 font-bold text-azul hover:underline'>Esqueci minha Senha</Link>
                         </div>
                     </div>
                 </div>
