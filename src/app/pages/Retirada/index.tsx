@@ -12,13 +12,20 @@ export default function Retirada(){
     const [modal, setModal] = useState(false)
 
     const { isLogged } = useContext(EmployeeContext)
-    const {} = useContext(WithdrawContext)
+    const { getAllWithdraws } = useContext(WithdrawContext)
+
+    function getAll() {
+        getAllWithdraws().then(() => null)
+    }
+     
     const navigate = useNavigate()
 
     useEffect(() => {
         const token = localStorage.getItem('token')
 
         if(!isLogged && !token) navigate('/')
+
+        getAll()
     }, [])
 
     const json = [
