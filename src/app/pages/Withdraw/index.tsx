@@ -1,6 +1,6 @@
 import logo from '../../assets/LogoNote.svg'
 import logoMaua from '../../assets/LogoMaua.png'
-import { FaSearch, FaCheckCircle } from 'react-icons/fa'
+import { FaSearch, FaCheckCircle, FaDoorOpen } from 'react-icons/fa'
 import { GoXCircleFill } from "react-icons/go";
 import { RiRefreshFill } from "react-icons/ri";
 import { useContext, useEffect, useState } from 'react'
@@ -19,6 +19,11 @@ export default function Retirada(){
     }
      
     const navigate = useNavigate()
+
+    function Logout(){
+        localStorage.removeItem('token')
+        navigate('/')
+    }
 
     useEffect(() => {
         const token = localStorage.getItem('token')
@@ -66,6 +71,9 @@ export default function Retirada(){
             <img src={logo} alt="Logo da NoteMaua" />
             <div className="bg-branco border-[12px] border-cinza-escuro rounded-3xl w-[80%] h-[70%] p-8">
                 <div className='flex items-center'>
+                    <div>
+                        <button onClick={()=>Logout()} className='flex items-center gap-2 bg-red-500 px-4 py-1 rounded-lg text-white'>Sair<FaDoorOpen/></button>
+                    </div>
                     <div className='flex justify-center gap-4 w-full'>
                         <input className='bg-cinza-claro px-2 py-1 shadow-xl rounded-md' type="number" placeholder='Número de série' />
                         <button type='button' className='bg-verde font-semibold px-6 shadow-xl py-1 rounded-md' onClick={()=>setModal(true)}>Confirmar devolução</button>
@@ -79,10 +87,10 @@ export default function Retirada(){
             
                 <div className='flex items-center gap-4 my-6'>
                     <input type="text" className='bg-cinza-claro px-2 py-1 shadow-xl rounded-md' placeholder='Pesquisar'/>
-                    <select className='w-32 h-8 rounded-md border-[1px] border-black'>
-                        <option value="">1</option>
-                        <option value="">2</option>
-                        <option value="">3</option>
+                    <select className='w-32 h-8 rounded-md border-[1px] border-black text-center'>
+                        <option value="ra">-- Escolha --</option>
+                        <option value="ra">Ra do Aluno</option>
+                        <option value="serialNumber">Número de série</option>
                     </select>
                     <button className='text-xl'><FaSearch/></button>
                 </div>
@@ -138,7 +146,6 @@ export default function Retirada(){
                                     <td>
                                         <div className='flex justify-around rounded-lg m-1 p-4 bg-cinza-claro text-center text-lg font-bold underline'>
                                             <FaCheckCircle className="text-2xl text-verde hover:cursor-pointer" />
-                                            <GoXCircleFill className="text-2xl text-vermelho hover:cursor-pointer"/>
                                         </div>
                                     </td>
                                 </>
