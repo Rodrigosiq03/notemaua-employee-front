@@ -2,31 +2,29 @@
 
 import { AxiosInstance } from "axios";
 import { IWithdrawRepository } from "../../../modules/withdraw/domain/repositories/withdraw_repository_interface";
-import { JsonWithdrawProps } from "../../domain/entities/withdraw";
+import {
+  JsonGetAllWithdrawsProps,
+  Withdraw,
+} from "../../domain/entities/withdraw";
 import { decorate, injectable } from "inversify";
 
 export class WithdrawRepositoryHttp implements IWithdrawRepository {
   constructor(private readonly httpWithdraw: AxiosInstance) {}
 
-  async createWithdraw(
-    notebookSerialNumber: string,
-    studentRA: string,
-    name: string,
-    initTime: number
-  ): Promise<JsonWithdrawProps> {
+  async getAllWithdraws(): Promise<Withdraw[]> {
     try {
-      const response = await this.httpWithdraw.post<JsonWithdrawProps>(
-        "/create-withdraw",
+      const token = JSON.parse(localStorage.getItem("token")!);
+      const response = await this.httpWithdraw.post<JsonGetAllWithdrawsProps>(
+        "/get-all-withdraw",
         {
-          notebookSerialNumber,
-          studentRA,
-          name,
-          initTime,
+          headers: {
+            Authorization: "Bearer " + token,
+          },
         }
       );
 
       if (response.status === 200) {
-        return response.data;
+        return response.data.withdraws;
       }
 
       throw new Error("Error creating withdraw");
