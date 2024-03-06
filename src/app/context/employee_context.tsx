@@ -62,6 +62,7 @@ export function EmployeeContextProvider({ children }: PropsWithChildren) {
       return message
     } catch (error: any) {
       console.error('Something went wrong with forgotPassword: ',error)
+      return 'E-mail não cadastrado'
     }
   }
 

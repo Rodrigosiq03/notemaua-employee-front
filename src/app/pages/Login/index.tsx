@@ -1,14 +1,17 @@
 import logo from '../../assets/LogoNote.svg'
 import logoMaua from '../../assets/LogoMaua.png'
 import { Link, useNavigate } from 'react-router-dom'
-import React, { useContext, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import { EmployeeContext } from '../../context/employee_context'
+import { FaEye, FaEyeSlash } from 'react-icons/fa'
+
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 export default function Login(){
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
+    const [viewPass, setViewPass] = useState(true)
 
     const navigate = useNavigate()
 
@@ -29,10 +32,24 @@ export default function Login(){
             });
             return
         }
+
         const token = await login(email, password)
+        
         if (token) {
             setIsLogged(true)
-            navigate('/Retirada')
+            toast.success("Login efetuado com sucesso", {
+                position: "top-center",
+                autoClose: 3000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: "light"
+            });
+            setTimeout(() => {
+                navigate('/Retirada')
+            }, 3000)
         }
         toast.error("Email ou Senha Inválidos", {
             position: "top-center",
@@ -45,6 +62,10 @@ export default function Login(){
             theme: "light"
         });
     }
+
+    useEffect(() => {
+        if(localStorage.getItem('token')) navigate('/Retirada')
+    }, [])
 
     return(
         <>
@@ -66,7 +87,12 @@ export default function Login(){
 
                                 <div className='flex flex-col gap-1'>
                                     <label className='px-2 font-semibold' htmlFor="">Senha</label>
-                                    <input onChange={(e) => setPassword(e.target.value)} className='bg-cinza-claro shadow-2xl p-2 rounded-xl' type="password" />
+                                    <div className='bg-cinza-claro shadow-2xl p-2 rounded-xl flex justify-between items-center gap-4'>
+                                        <input onChange={(e)=>setPassword(e.target.value)} className="w-full bg-transparent outline-none" type={viewPass ? "password" : "text"} />
+                                        <button onClick={()=>setViewPass(!viewPass)} type='button'>
+                                            {viewPass ? <FaEye size={20}/> : <FaEyeSlash size={20}/> }
+                                        </button>
+                                    </div>
                                 </div>
 
                             </div>
