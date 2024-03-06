@@ -6,11 +6,13 @@ import { RiRefreshFill } from "react-icons/ri";
 import { useContext, useEffect, useState } from 'react'
 import { EmployeeContext } from '../../context/employee_context';
 import { useNavigate } from 'react-router-dom';
+import { WithdrawContext } from '../../context/withdraw_context';
 
 export default function Retirada(){
     const [modal, setModal] = useState(false)
 
     const { isLogged } = useContext(EmployeeContext)
+    const {} = useContext(WithdrawContext)
     const navigate = useNavigate()
 
     useEffect(() => {
