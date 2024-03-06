@@ -19,6 +19,10 @@ export interface JsonWithdrawProps {
   message: string;
 }
 
+export interface JsonGetAllWithdrawsProps {
+    withdraws: Withdraw[]
+}
+
 export class Withdraw {
   constructor(public props: WithdrawProps) {
     this.validateProps(props);
