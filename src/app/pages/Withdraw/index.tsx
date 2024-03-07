@@ -8,6 +8,7 @@ import { EmployeeContext } from '../../context/employee_context';
 import { useNavigate } from 'react-router-dom';
 import { WithdrawContext } from '../../context/withdraw_context';
 import { Withdraw } from '../../../@clean/shared/domain/entities/withdraw';
+import { IoIosCloseCircle } from "react-icons/io";
 
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -272,8 +273,9 @@ export default function Retirada(){
                 {/* <!-- Modal content --> */}
                 <div className="relative bg-branco rounded-xl shadow border-[12px] border-cinza-escuro p-8">
                     {/* <!-- Modal header --> */}
-                    <div>
-                        <h3 className="text-2xl font-bold text-center mb-8">Alterar Senha</h3>
+                    <div className='flex items-center justify-between mb-8'>
+                        <h3 className="text-2xl font-bold text-center">Alterar Senha</h3>
+                        <IoIosCloseCircle onClick={()=>setModal(false)} className='cursor-pointer' size={24}/>
                     </div>
                     {/* <!-- Modal body --> */}
                     <div className="flex flex-col gap-8">
@@ -283,11 +285,11 @@ export default function Retirada(){
                         </div>
                         <div className='flex flex-col'>
                             <label className='text-md'>Antiga Senha</label>
-                            <input onChange={(e) => setOldPassword(e.target.value)} className="bg-gray-400 shadow-2xl p-2 rounded-xl" type="text" />
+                            <input onChange={(e) => setOldPassword(e.target.value)} className="bg-gray-400 shadow-2xl p-2 rounded-xl" type="password" />
                         </div>
                         <div className='flex flex-col'>
                             <label className='text-md'>Nova Senha</label>
-                            <input onChange={(e)=>setNewPassword(e.target.value)} className="bg-gray-400 shadow-2xl p-2 rounded-xl" type="text" />
+                            <input onChange={(e)=>setNewPassword(e.target.value)} className="bg-gray-400 shadow-2xl p-2 rounded-xl" type="password" />
                         </div>
                     </div>
                     {/* <!-- Modal footer --> */}
