@@ -5,5 +5,5 @@ export const httpEmployee = axios.create({
 });
 
 export const httpWithdraw = axios.create({
-  baseURL: process.env.EXPO_PUBLIC_API_WITHDRAW,
+  baseURL: import.meta.env.VITE_API_WITHDRAW,
 });

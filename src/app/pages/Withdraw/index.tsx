@@ -7,18 +7,94 @@ import { useContext, useEffect, useState } from 'react'
 import { EmployeeContext } from '../../context/employee_context';
 import { useNavigate } from 'react-router-dom';
 import { WithdrawContext } from '../../context/withdraw_context';
+import { Withdraw } from '../../../@clean/shared/domain/entities/withdraw';
+
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 export default function Retirada(){
     const [modal, setModal] = useState(false)
+    const [serial, setSerial] = useState('')
+    const [filter, setFilter] = useState('')
+    const [typeFilter, setTypeFilter] = useState('')
 
     const { isLogged } = useContext(EmployeeContext)
-    const { getAllWithdraws } = useContext(WithdrawContext)
+    const { setWithdraws, getAllWithdraws, updateWithdrawState, finishWithdraw, withdraws } = useContext(WithdrawContext)
+
+    function filterWithdraws(filter: string, typeFilter: string, withdrawList: Withdraw[] | undefined = withdraws) {
+        if(typeFilter == 'ra'){
+            const filtered = withdrawList ? withdrawList.filter((withdraw: Withdraw) => withdraw.studentRA ? withdraw.studentRA.includes(filter) : undefined) : []
+            setWithdraws(filtered)
+        }else if(typeFilter == 'serialNumber'){
+            const filtered = withdrawList ? withdrawList.filter((withdraw: Withdraw) => withdraw.notebookSerialNumber.includes(filter)) : []
+            setWithdraws(filtered)
+        }else{
+            getAll()
+        }
+    }
+
+    const navigate = useNavigate()
 
     function getAll() {
-        getAllWithdraws().then(() => null)
+        getAllWithdraws()
     }
-     
-    const navigate = useNavigate()
+
+    async function updateWithdraw(serialNumber: string, state: boolean){
+        const response = await updateWithdrawState(serialNumber, state)
+        if(response){
+            getAll()
+            return toast.success("alterado com sucesso", {
+                position: "top-center",
+                autoClose: 3000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: "light"
+            });
+        }else{
+            return toast.error("Erro ao alterar estado", {
+                position: "top-center",
+                autoClose: 3000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: "light"
+            });
+        }
+    }
+
+    async function endWithdraw(serialNumber: string){
+        const response = await finishWithdraw(serialNumber)
+        if(response){
+            getAll()
+            return toast.success("Devolução realizada com sucesso", {
+                position: "top-center",
+                autoClose: 3000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: "light"
+            });
+            setSerial('')
+        }else{
+            return toast.error("Erro ao realizar devolução", {
+                position: "top-center",
+                autoClose: 3000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: "light"
+            });
+        }
+    }
 
     function Logout(){
         localStorage.removeItem('token')
@@ -27,47 +103,15 @@ export default function Retirada(){
 
     useEffect(() => {
         const token = localStorage.getItem('token')
-
         if(!isLogged && !token) navigate('/')
-
+        
         getAll()
     }, [])
-
-    const json = [
-        {
-            "serie": "12345",
-            "estado": "ativo",
-            "retirada": "07:40",
-            "RA": 'xx.xxxxx-x',
-            "nome": "Rodrigo"
-        },
-        {
-            "serie": "19283",
-            "estado": "ativo",
-            "retirada": "11:30",
-            "RA": 'xx.xxxxx-x',
-            "nome": "Luca"
-        },
-        {
-            "serie": "57012",
-            "estado": "ativo",
-            "retirada": "12:20",
-            "RA": 'xx.xxxxx-x',
-            "nome": "Gabriel"
-        },
-        {
-            "serie": "22398",
-            "estado": "pendente"
-        },
-        {
-            "serie": "22398",
-            "estado": "inativo"
-        },
-    ]
 
     return (
         <>
         <section className='h-screen bg-azul-claro flex flex-col justify-around items-center gap-4 p-4'>
+            <ToastContainer position="top-center" autoClose={3000} hideProgressBar={false} newestOnTop={false} closeOnClick rtl={false} pauseOnFocusLoss draggable pauseOnHover theme="light" />
             <img src={logo} alt="Logo da NoteMaua" />
             <div className="bg-branco border-[12px] border-cinza-escuro rounded-3xl w-[80%] h-[70%] p-8">
                 <div className='flex items-center'>
@@ -75,24 +119,24 @@ export default function Retirada(){
                         <button onClick={()=>Logout()} className='flex items-center gap-2 bg-red-500 px-4 py-1 rounded-lg text-white'>Sair<FaDoorOpen/></button>
                     </div>
                     <div className='flex justify-center gap-4 w-full'>
-                        <input className='bg-cinza-claro px-2 py-1 shadow-xl rounded-md' type="number" placeholder='Número de série' />
-                        <button type='button' className='bg-verde font-semibold px-6 shadow-xl py-1 rounded-md' onClick={()=>setModal(true)}>Confirmar devolução</button>
+                        <input onChange={(e)=>setSerial(e.target.value)} className='bg-cinza-claro px-2 py-1 shadow-xl rounded-md' type="number" placeholder='Número de série' value={serial} />
+                        <button type='button' className='bg-verde font-semibold px-6 shadow-xl py-1 rounded-md' onClick={()=>endWithdraw(serial)}>Confirmar devolução</button>
                     </div>
                     <div>
-                        <RiRefreshFill className='text-4xl hover:cursor-pointer'/>
+                        <RiRefreshFill onClick={()=>getAll()} className='text-4xl hover:cursor-pointer'/>
                     </div>
                 </div>
 
                 <div className='w-full h-[1px] mt-8 mb-2 bg-black'/>
             
                 <div className='flex items-center gap-4 my-6'>
-                    <input type="text" className='bg-cinza-claro px-2 py-1 shadow-xl rounded-md' placeholder='Pesquisar'/>
-                    <select className='w-32 h-8 rounded-md border-[1px] border-black text-center'>
-                        <option value="ra">-- Escolha --</option>
+                    <input onChange={(e)=>setFilter(e.target.value)} type="text" className='bg-cinza-claro px-2 py-1 shadow-xl rounded-md' placeholder='Pesquisar'/>
+                    <select onChange={(e)=>setTypeFilter(e.target.value)} className='w-32 h-8 rounded-md border-[1px] border-black text-center'>
+                        <option value="">-- Escolha --</option>
                         <option value="ra">Ra do Aluno</option>
                         <option value="serialNumber">Número de série</option>
                     </select>
-                    <button className='text-xl'><FaSearch/></button>
+                    <button onClick={()=>filterWithdraws(filter, typeFilter)} className='text-xl'><FaSearch/></button>
                 </div>
 
                 <div className='relative h-[70%] overflow-y-auto'>
@@ -108,77 +152,80 @@ export default function Retirada(){
                             </tr>
                         </thead>
                         <tbody>
-                            {json.map((cell, index) => (
-                            <tr key={index}>
+                            {withdraws && withdraws.filter((withdraw: Withdraw) => withdraw.state == 'APPROVED').map((cell) => (
+                            <tr key={Number(cell.notebookSerialNumber)}>
                                 <td>
                                     <div className='rounded-lg m-2 p-4 bg-cinza-claro text-center text-lg font-bold underline'>
-                                        {cell.serie}
+                                        {cell.notebookSerialNumber}
                                     </div>
                                 </td>
-
-                                { cell.estado == 'ativo' ? 
-                                <>
+                                <td>
+                                    <div className='flex items-center justify-center gap-2 rounded-l-lg p-4 bg-cinza-claro text-center text-lg'>
+                                        <div className='w-3 h-3 bg-verde rounded-full'/>
+                                        {cell.state}
+                                    </div>
+                                </td>
+                                <td>
+                                    <div className='p-4 bg-cinza-claro text-center text-lg'>
+                                        {cell.initTime ? new Date(cell.initTime).getHours() + ':' + new Date(cell.initTime).getMinutes() : ''}
+                                    </div>
+                                </td>
+                                
+                                <td>
+                                    <div className='p-4 bg-cinza-claro text-center text-lg'>
+                                        {cell.studentRA}
+                                    </div>
+                                </td>
+                                
+                                <td>
+                                    <div className='rounded-r-lg p-4 bg-cinza-claro text-center text-lg'>
+                                        {cell.name}
+                                    </div>
+                                </td>
+                                <td>
+                                    <div className='flex justify-around rounded-lg m-1 p-4 bg-cinza-claro text-center text-lg font-bold underline'>
+                                        <FaCheckCircle className="text-2xl text-verde" />
+                                    </div>
+                                </td>
+                            </tr>
+                            ))}
+                            {withdraws && withdraws.filter((withdraw: Withdraw) => withdraw.state == "PENDING").map((cell) => (
+                                <tr tabIndex={Number(cell.notebookSerialNumber)}>
                                     <td>
-                                        <div className='flex items-center justify-center gap-2 rounded-l-lg p-4 bg-cinza-claro text-center text-lg'>
-                                            <div className='w-3 h-3 bg-verde rounded-full'/>
-                                            {cell.estado}
+                                        <div className='rounded-lg m-2 p-4 bg-cinza-claro text-center text-lg font-bold underline'>
+                                            {cell.notebookSerialNumber}
                                         </div>
                                     </td>
-
-                                    <td>
-                                        <div className='p-4 bg-cinza-claro text-center text-lg'>
-                                            {cell.retirada}
-                                        </div>
-                                    </td>
-                                    
-                                    <td>
-                                        <div className='p-4 bg-cinza-claro text-center text-lg'>
-                                            {cell.RA}
-                                        </div>
-                                    </td>
-                                    
-                                    <td>
-                                        <div className='rounded-r-lg p-4 bg-cinza-claro text-center text-lg'>
-                                            {cell.nome}
-                                        </div>
-                                    </td>
-
-                                    <td>
-                                        <div className='flex justify-around rounded-lg m-1 p-4 bg-cinza-claro text-center text-lg font-bold underline'>
-                                            <FaCheckCircle className="text-2xl text-verde hover:cursor-pointer" />
-                                        </div>
-                                    </td>
-                                </>
-                                    : cell.estado == 'pendente' ?
-                                <>
                                     <td colSpan={4}>
                                         <div className='flex items-center justify-center gap-2 rounded-lg p-4 bg-cinza-claro text-center text-lg'>
                                             <div className='w-3 h-3 bg-amarelo rounded-full'/>
-                                            {cell.estado}
+                                            {cell.state}
                                         </div>
                                     </td>
                                     <td>
                                         <div className='flex justify-around rounded-lg m-1 p-4 bg-cinza-claro text-center text-lg font-bold underline'>
-                                            <FaCheckCircle className="text-2xl text-verde hover:cursor-pointer" />
-                                            <GoXCircleFill className="text-2xl text-vermelho hover:cursor-pointer"/>
+                                            <FaCheckCircle onClick={()=>updateWithdraw(cell.notebookSerialNumber, true)} className="text-2xl text-verde hover:cursor-pointer" />
+                                            <GoXCircleFill onClick={()=>updateWithdraw(cell.notebookSerialNumber, false)} className="text-2xl text-vermelho hover:cursor-pointer"/>
                                         </div>
                                     </td>
-                                </>
-                                    :
-                                <>
+                                </tr>
+                            ))}
+                            {withdraws && withdraws.filter((withdraw: Withdraw) => withdraw.state == "INACTIVE").map((cell) => (
+                                <tr tabIndex={Number(cell.notebookSerialNumber)}>
+                                    <td>
+                                        <div className='rounded-lg m-2 p-4 bg-cinza-claro text-center text-lg font-bold underline'>
+                                            {cell.notebookSerialNumber}
+                                        </div>
+                                    </td>
                                     <td colSpan={5}>
                                         <div className='flex items-center justify-center gap-2 rounded-lg p-4 bg-cinza-claro text-center text-lg'>
                                             <div className='w-3 h-3 bg-vermelho rounded-full'/>
-                                            {cell.estado}
+                                            {cell.state}
                                         </div>
                                     </td>
-                                </>
-                                }
-                            </tr>
+                                </tr>
                             ))
-
                             }
-
                         </tbody>
                     </table>
                 </div>
