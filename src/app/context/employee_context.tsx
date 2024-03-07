@@ -5,11 +5,13 @@ import { LoginUsecase } from "../../@clean/modules/employee/usecases/login_useca
 import { ForgotPasswordUsecase } from "../../@clean/modules/employee/usecases/forgot_password_usecase";
 import { ConfirmForgotPasswordUsecase } from "../../@clean/modules/employee/usecases/confirm_password_usecase";
 import { createContext, PropsWithChildren, useState } from "react";
+import { UpdatePasswordUsecase } from "../../@clean/modules/employee/usecases/update_password_usecase";
 
 export type EmployeeContextType = {
   login: (email: string, password: string) => Promise<string | undefined>
   forgotPassword: (email: string) => Promise<string | undefined>
   confirmForgotPassword: (email: string, newPassword: string) => Promise<string | undefined>
+  updatePassword: (email: string, oldPassword: string, newPassword: string) => Promise<string | undefined>
   isLogged: boolean
   setIsLogged: (isLogged: boolean) => void
 }
@@ -27,6 +29,10 @@ const defaultEmployeeContext: EmployeeContextType = {
     return ''
   },
 
+  updatePassword: async (email: string, oldPassword: string, newPassword: string) => {
+    return ''
+  },
+
   isLogged: false,
 
   setIsLogged: (value: boolean) => void 0
@@ -40,6 +46,7 @@ const forgotPasswordUsecase = containerEmployee.get<ForgotPasswordUsecase>(Resgi
 
 const confirmForgotPasswordUsecase = containerEmployee.get<ConfirmForgotPasswordUsecase>(ResgistryEmployee.ConfirmForgotPasswordUseCase)
 
+const updatePasswordUsecase = containerEmployee.get<UpdatePasswordUsecase>(ResgistryEmployee.UpdatePasswordUseCase)
 
 export function EmployeeContextProvider({ children }: PropsWithChildren) {
   const [isLogged, setIsLogged] = useState(false)
@@ -78,9 +85,19 @@ export function EmployeeContextProvider({ children }: PropsWithChildren) {
     }
   }
 
+  async function updatePassword(email:string, oldPassword:string, newPassword:string) {
+    try {
+      const message = await updatePasswordUsecase.execute(email, oldPassword, newPassword)
+
+      return message
+    } catch (error: any) {
+      console.error('Something went wrong with updatePassword: ',error)
+    }
+  }
+
   
   return (
-    <EmployeeContext.Provider value={{ login, forgotPassword, confirmForgotPassword, isLogged, setIsLogged }}>
+    <EmployeeContext.Provider value={{ login, forgotPassword, confirmForgotPassword, updatePassword, isLogged, setIsLogged }}>
       {children}
     </EmployeeContext.Provider>
   )

@@ -12,6 +12,10 @@ type ConfirmForgotPasswordResponse = {
   message: string
 }
 
+type UpdatePasswordResponse = {
+  message: string
+}
+
 export class EmployeeRepositoryHttp implements IEmployeeRepository {
   constructor(private readonly httpEmployee: AxiosInstance) {}
 
@@ -40,6 +44,15 @@ export class EmployeeRepositoryHttp implements IEmployeeRepository {
   async confirmForgotPassword(email: string, password: string, createdAt: number): Promise<string> {
     try {
       const response = await this.httpEmployee.post<ConfirmForgotPasswordResponse>('/confirm-forgot-password-employee', { email, password, createdAt })
+
+      return response.data.message
+    } catch(error: any) {
+      throw new Error(error)
+    }
+  }
+  async updatePassword(email: string, oldPassword: string, newPassword: string): Promise<string> {
+    try {
+      const response = await this.httpEmployee.post<UpdatePasswordResponse>('/update-password-employee', { email, oldPassword, newPassword })
 
       return response.data.message
     } catch(error: any) {
