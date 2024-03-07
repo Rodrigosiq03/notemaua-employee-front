@@ -7,6 +7,15 @@ import { STATE } from "../../domain/enums/state_enum";
 import { NoItemsFound } from "../../domain/helpers/errors/usecase_errors";
 
 export class WithdrawRepositoryMock implements IWithdrawRepository {
+  getAllWithdraws(): Promise<Withdraw[]> {
+    throw new Error("Method not implemented.");
+  }
+  updateWithdrawState(notebookSerialNumber: string, state: boolean): Promise<string> {
+    throw new Error("Method not implemented.");
+  }
+  finishWithdraw(notebookSerialNumber: string): Promise<string> {
+    throw new Error("Method not implemented.");
+  }
   private inactiveWithdraws: Withdraw[] = [
     new Withdraw({
       notebookSerialNumber: "ABC123",
