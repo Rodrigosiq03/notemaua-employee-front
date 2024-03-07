@@ -18,7 +18,11 @@ export default function Retirada(){
     const [filter, setFilter] = useState('')
     const [typeFilter, setTypeFilter] = useState('')
 
-    const { isLogged } = useContext(EmployeeContext)
+    const [email, setEmail] = useState('')
+    const [oldPassword, setOldPassword] = useState('')
+    const [newPassword, setNewPassword] = useState('')
+
+    const { isLogged, updatePassword } = useContext(EmployeeContext)
     const { setWithdraws, getAllWithdraws, updateWithdrawState, finishWithdraw, withdraws } = useContext(WithdrawContext)
 
     function filterWithdraws(filter: string, typeFilter: string, withdrawList: Withdraw[] | undefined = withdraws) {
@@ -96,6 +100,34 @@ export default function Retirada(){
         }
     }
 
+    async function postNewPassword(email: string, oldPassword: string, newPassword: string){
+        const response = await updatePassword(email, oldPassword, newPassword)
+        if(response){
+            setModal(false)
+            return toast.success("Senha alterada com sucesso", {
+                position: "top-center",
+                autoClose: 3000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: "light"
+            });
+        }else{
+            return toast.error("Erro ao alterar senha", {
+                position: "top-center",
+                autoClose: 3000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: "light"
+            });
+        }
+    }
+
     function Logout(){
         localStorage.removeItem('token')
         navigate('/')
@@ -115,12 +147,13 @@ export default function Retirada(){
             <img src={logo} alt="Logo da NoteMaua" />
             <div className="bg-branco border-[12px] border-cinza-escuro rounded-3xl w-[80%] h-[70%] p-8">
                 <div className='flex items-center'>
-                    <div>
-                        <button onClick={()=>Logout()} className='flex items-center gap-2 bg-red-500 px-4 py-1 rounded-lg text-white'>Sair<FaDoorOpen/></button>
+                    <div className='flex gap-4'>
+                        <button onClick={()=>Logout()} className='flex items-center gap-2 bg-red-500 px-4 py-1 rounded-lg text-white hover:bg-red-400'>Sair<FaDoorOpen/></button>
+                        <button onClick={()=>setModal(true)} className='w-32 bg-azul flex items-center gap-2 px-4 py-1 rounded-lg text-white hover:bg-blue-500'>Alterar Senha</button>
                     </div>
                     <div className='flex justify-center gap-4 w-full'>
                         <input onChange={(e)=>setSerial(e.target.value)} className='bg-cinza-claro px-2 py-1 shadow-xl rounded-md' type="number" placeholder='Número de série' value={serial} />
-                        <button type='button' className='bg-verde font-semibold px-6 shadow-xl py-1 rounded-md' onClick={()=>endWithdraw(serial)}>Confirmar devolução</button>
+                        <button type='button' className='bg-verde hover:bg-green-400 font-semibold px-6 shadow-xl py-1 rounded-md' onClick={()=>endWithdraw(serial)}>Confirmar devolução</button>
                     </div>
                     <div>
                         <RiRefreshFill onClick={()=>getAll()} className='text-4xl hover:cursor-pointer'/>
@@ -234,33 +267,32 @@ export default function Retirada(){
         </section>
 
         {/* <!-- Main modal --> */}
-        <div id="default-modal" tabIndex={-1} aria-hidden="true" className={`${modal ? "" : "hidden"} bg-[rgba(0,0,0,0.5)] overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full`}>
+        <div id="default-modal" tabIndex={-1} aria-hidden="true" className={`${modal ? "" : "hidden"} bg-[rgba(0,0,0,0.5)] overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-full`}>
             <div className="relative top-[25%] left-[35%] p-4 w-full max-w-lg max-h-full">
                 {/* <!-- Modal content --> */}
                 <div className="relative bg-branco rounded-xl shadow border-[12px] border-cinza-escuro p-8">
                     {/* <!-- Modal header --> */}
                     <div>
-                        <h3 className="text-2xl font-bold text-center mb-8">
-                            Confirmar Devolução
-                        </h3>
+                        <h3 className="text-2xl font-bold text-center mb-8">Alterar Senha</h3>
                     </div>
                     {/* <!-- Modal body --> */}
                     <div className="flex flex-col gap-8">
-                        <div className='text-center border-y-2 py-8'>
-                            <h3 className='text-2xl font-bold'>Número de Série: 12345</h3>
-                            <h5>Horário da Retirada: <span className='font-bold'>7:40</span></h5>
-                            <h5>Horário de Devolução: <span className='font-bold'>11:40</span></h5>
+                        <div className='flex flex-col'>
+                            <label className='text-md'>Email</label>
+                            <input onChange={(e)=>setEmail(e.target.value)} className="bg-gray-400 shadow-2xl p-2 rounded-xl" type="text" />
                         </div>
-
-                        <div className='text-center'>
-                            <h3>Gabriel da Silva Merola</h3>
-                            <h5>13.01292-6@maua.br</h5>
-                            <h5>RA: <span className='font-bold'>13.01292-6</span></h5>
+                        <div className='flex flex-col'>
+                            <label className='text-md'>Antiga Senha</label>
+                            <input onChange={(e) => setOldPassword(e.target.value)} className="bg-gray-400 shadow-2xl p-2 rounded-xl" type="text" />
+                        </div>
+                        <div className='flex flex-col'>
+                            <label className='text-md'>Nova Senha</label>
+                            <input onChange={(e)=>setNewPassword(e.target.value)} className="bg-gray-400 shadow-2xl p-2 rounded-xl" type="text" />
                         </div>
                     </div>
                     {/* <!-- Modal footer --> */}
                     <div className="flex justify-center items-center p-4 md:p-5">
-                        <button type='button' className='bg-verde font-semibold px-6 shadow-xl py-1 rounded-md' onClick={()=>setModal(false)}>Confirmar devolução</button>
+                        <button type='button' className='bg-azul text-white font-semibold px-6 shadow-xl py-1 rounded-md' onClick={()=>postNewPassword(email, oldPassword, newPassword)}>Alterar Senha</button>
                     </div>
                 </div>
             </div>
