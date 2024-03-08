@@ -66,6 +66,24 @@ export class EmployeeRepositoryMock implements IEmployeeRepository {
     return Promise.resolve(message)
   }
 
+  async updatePassword(email: string, oldPassword: string, newPassword: string): Promise<string> {
+    const employee = this.getEmployee(email)
+
+    if (!employee) {
+      throw new NoItemsFound('email')
+    }
+
+    if (employee.password !== oldPassword) {
+      throw new Error('Old password does not match')
+    }
+
+    employee.setPassword = newPassword
+
+    const message = 'Password updated'
+
+    return Promise.resolve(message)
+  }
+
 }
 
 decorate(injectable(), EmployeeRepositoryMock)
