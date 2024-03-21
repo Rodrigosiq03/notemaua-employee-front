@@ -71,17 +71,31 @@ export default function Retirada(){
     async function updateWithdraw(serialNumber: string, state: boolean){
         const response = await updateWithdrawState(serialNumber, state)
         if(response){
-            getAll()
-            return toast.success("alterado com sucesso", {
-                position: "top-center",
-                autoClose: 3000,
-                hideProgressBar: false,
-                closeOnClick: true,
-                pauseOnHover: true,
-                draggable: true,
-                progress: undefined,
-                theme: "light"
-            });
+            if(state){
+                getAll()
+                return toast.success("Retirada confirmada com sucesso", {
+                    position: "top-center",
+                    autoClose: 3000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                    theme: "light"
+                });
+            } else{
+                getAll()
+                return toast.warn("Retirada cancelada com sucesso", {
+                    position: "top-center",
+                    autoClose: 3000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                    theme: "light"
+                });
+            }
         }else{
             return toast.error("Erro ao alterar estado", {
                 position: "top-center",
@@ -158,10 +172,23 @@ export default function Retirada(){
         navigate('/')
     }
 
+    function Verify(){
+        const timeNow = new Date().getTime()
+        const timeLogin = localStorage.getItem('timeLogin')
+        if(timeLogin){
+            const time = new Date(Number(timeLogin)).getTime()
+            if((timeNow - time) > (7*24*60*60*1000)){
+                localStorage.removeItem('token')
+                navigate('/')
+            }
+        }
+    }
+
     useEffect(() => {
         const token = localStorage.getItem('token')
         if(!isLogged && !token) navigate('/')
-        
+
+        Verify()
         getAll()
     }, [])
 

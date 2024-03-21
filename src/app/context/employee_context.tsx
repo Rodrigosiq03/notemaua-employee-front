@@ -55,6 +55,7 @@ export function EmployeeContextProvider({ children }: PropsWithChildren) {
     try {
       const token = await loginUsecase.execute(email, password)
       localStorage.setItem('token', token)
+      localStorage.setItem('timeLogin', new Date().getTime().toString())
 
       return token
     } catch (error: any) {
