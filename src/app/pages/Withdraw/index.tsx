@@ -42,6 +42,30 @@ export default function Retirada(){
 
     function getAll() {
         getAllWithdraws()
+
+        if(!withdraws){
+            return toast.error("Erro ao carregar retiradas", {
+                position: "top-center",
+                autoClose: 3000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: "light"
+            });
+        } else {
+            return toast.success("Retiradas carregadas com sucesso", {
+                position: "top-center",
+                autoClose: 3000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: "light"
+            });
+        }
     }
 
     async function updateWithdraw(serialNumber: string, state: boolean){

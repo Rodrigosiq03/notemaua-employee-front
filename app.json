@@ -1,0 +1,12 @@
+{
+  "expo": {
+    "extra": {
+      "eas": {
+        "projectId": "58e0a9cc-761e-49d4-8500-798ab8356553"
+      }
+    },
+    "android": {
+      "package": "com.rodbeatz.mauanoteweb"
+    }
+  }
+}
