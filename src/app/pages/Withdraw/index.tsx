@@ -134,10 +134,23 @@ export default function Retirada(){
         navigate('/')
     }
 
+    function Verify(){
+        const timeNow = new Date().getTime()
+        const timeLogin = localStorage.getItem('timeLogin')
+        if(timeLogin){
+            const time = new Date(Number(timeLogin)).getTime()
+            if((timeNow - time) > (7*24*60*60*1000)){
+                localStorage.removeItem('token')
+                navigate('/')
+            }
+        }
+    }
+
     useEffect(() => {
         const token = localStorage.getItem('token')
         if(!isLogged && !token) navigate('/')
-        
+
+        Verify()
         getAll()
     }, [])
 
