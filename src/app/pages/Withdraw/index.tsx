@@ -47,17 +47,31 @@ export default function Retirada(){
     async function updateWithdraw(serialNumber: string, state: boolean){
         const response = await updateWithdrawState(serialNumber, state)
         if(response){
-            getAll()
-            return toast.success("alterado com sucesso", {
-                position: "top-center",
-                autoClose: 3000,
-                hideProgressBar: false,
-                closeOnClick: true,
-                pauseOnHover: true,
-                draggable: true,
-                progress: undefined,
-                theme: "light"
-            });
+            if(state){
+                getAll()
+                return toast.success("Retirada confirmada com sucesso", {
+                    position: "top-center",
+                    autoClose: 3000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                    theme: "light"
+                });
+            } else{
+                getAll()
+                return toast.warn("Retirada cancelada com sucesso", {
+                    position: "top-center",
+                    autoClose: 3000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                    theme: "light"
+                });
+            }
         }else{
             return toast.error("Erro ao alterar estado", {
                 position: "top-center",
