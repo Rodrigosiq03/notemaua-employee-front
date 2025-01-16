@@ -115,11 +115,8 @@ export class WithdrawRepositoryHttp implements IWithdrawRepository {
   async deleteLaptop(notebookSerialNumber: string): Promise<string> {
     try {
       const token = localStorage.getItem("token");
-      const response = await this.httpWithdraw.post<string>(
-        "/delete-notebook",
-        {
-          "notebookSerialNumber": notebookSerialNumber,
-        },
+      const response = await this.httpWithdraw.delete<string>(
+        "/delete-notebook?notebookSerialNumber=" + notebookSerialNumber,
         {
           headers: {
             Authorization: "Bearer " + token,

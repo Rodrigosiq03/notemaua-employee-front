@@ -52,8 +52,8 @@ export default function CreateLaptopModal({ isOpen, onClose, type }: CreateLapto
         <h1 className="text-xl font-bold">Número de Série</h1>
         <input value={serialNumber} type="text" className="bg-white px-4 text-center rounded-lg outline-none shadow-sm" placeholder="00000" onChange={(e) => handleSerialNumber(e.target.value)} />
         <div className="flex w-full justify-between">
-          <button className="bg-red-500 shadow-sm rounded-lg w-[48%] hover:bg-red-400 duration-200" onClick={onClose}>Cancelar</button>
-          <button className="bg-green-500 shadow-sm rounded-lg w-[48%] hover:bg-green-400 duration-200" onClick={create}>Criar</button>
+          <button className="bg-red-500 text-white shadow-sm rounded-lg w-[48%] hover:bg-red-400 duration-200" onClick={onClose}>Cancelar</button>
+          <button className="bg-green-500 text-white shadow-sm rounded-lg w-[48%] hover:bg-green-400 duration-200" onClick={create}>{type == "delete" ? "Deletar" : "Criar"}</button>
         </div>
       </div>
     </div>
