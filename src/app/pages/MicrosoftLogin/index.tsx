@@ -2,26 +2,18 @@ import logo from '../../assets/LogoNote.svg'
 import logoMaua from '../../assets/LogoMaua.png'
 import microsoftLogo from '../../assets/microsoftLogo.jpg'
 import { ToastContainer, toast } from "react-toastify";
-import { PublicClientApplication } from '@azure/msal-browser';
+import { useMsal } from '@azure/msal-react';
 
 export default function MicrosoftLogin() {
-  const msalConfig = {
-    auth: {
-      clientId: 'SEU_CLIENT_ID',
-      // authority: 'https://login.microsoftonline.com/common',
-      redirectUri: 'http://localhost:3000',
-    },
-  };
+  const { instance } = useMsal(); // Obtém a instância do MSAL do contexto
 
   const loginRequest = {
     scopes: ['openid', 'profile', 'email', 'offline_access', 'User.Read'],
   };
 
-  const msalInstance = new PublicClientApplication(msalConfig)
-  
   const handleLogin = async () => {
     try {
-      const response = await msalInstance.loginPopup(loginRequest);
+      const response = await instance.loginPopup(loginRequest);
       toast.success(`Welcome, ${response.account.username}!`);
       console.log(response);
     } catch (error) {
@@ -41,7 +33,7 @@ export default function MicrosoftLogin() {
           </div>
           <div className='flex flex-col mt-12 items-center justify-center'>
             <img src={microsoftLogo} alt="Microsoft" />
-            <button onClick={handleLogin} className='text-xl font-semibold duration-200 hover:underline'>
+            <button onClick={handleLogin} className='bg-azul text-branco text-xl font-semibold px-3 py-1 rounded-md hover:shadow-lg mt-4'>
               Entrar com Microsoft
             </button>
           </div>
