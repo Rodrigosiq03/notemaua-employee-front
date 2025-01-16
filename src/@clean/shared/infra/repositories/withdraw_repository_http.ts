@@ -95,7 +95,7 @@ export class WithdrawRepositoryHttp implements IWithdrawRepository {
       const response = await this.httpWithdraw.post<string>(
         "/create-notebook",
         {
-          serialNumber,
+          "notebookSerialNumber": serialNumber,
         },
         {
           headers: {

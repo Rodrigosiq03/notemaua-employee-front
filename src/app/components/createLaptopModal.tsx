@@ -1,13 +1,17 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
+import { WithdrawContext } from "../context/withdraw_context";
 
 interface CreateLaptopModalProps {
   isOpen: boolean;
   onClose: () => void;
+  type: "create" | "delete"
 }
 
-export default function CreateLaptopModal({ isOpen, onClose }: CreateLaptopModalProps) {
+export default function CreateLaptopModal({ isOpen, onClose, type }: CreateLaptopModalProps) {
   const [serialNumber, setSerialNumber] = useState<string>("");
   const [isVisible, setIsVisible] = useState<boolean>(true);
+
+  const { createLaptop } = useContext(WithdrawContext);
 
   useEffect(() => {
     if (isOpen) {
@@ -24,6 +28,15 @@ export default function CreateLaptopModal({ isOpen, onClose }: CreateLaptopModal
     return null;
   }
 
+  const create = async () => {
+    if(type === "create") {
+      await createLaptop(serialNumber);
+      onClose();
+    } else if (type === "delete") {
+      // Implementação da remoção
+      alert("delete")
+    }
+  };
 
   const handleSerialNumber = (value: string) => {
     if (/^\d*$/.test(value) && value.length <= 5) {
@@ -40,7 +53,7 @@ export default function CreateLaptopModal({ isOpen, onClose }: CreateLaptopModal
         <input value={serialNumber} type="text" className="bg-white px-4 text-center rounded-lg outline-none shadow-sm" placeholder="00000" onChange={(e) => handleSerialNumber(e.target.value)} />
         <div className="flex w-full justify-between">
           <button className="bg-red-500 shadow-sm rounded-lg w-[48%] hover:bg-red-400 duration-200" onClick={onClose}>Cancelar</button>
-          <button className="bg-green-500 shadow-sm rounded-lg w-[48%] hover:bg-green-400 duration-200">Criar</button>
+          <button className="bg-green-500 shadow-sm rounded-lg w-[48%] hover:bg-green-400 duration-200" onClick={create}>Criar</button>
         </div>
       </div>
     </div>

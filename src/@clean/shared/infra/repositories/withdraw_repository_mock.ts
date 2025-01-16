@@ -49,6 +49,10 @@ export class WithdrawRepositoryMock implements IWithdrawRepository {
       state: STATE.PENDING,
     };
   }
+
+  async createLaptop(notebookSerialNumber: string): Promise<string> {
+    throw new Error("Method not implemented.");      
+  }
 }
 
 decorate(injectable(), WithdrawRepositoryMock);

@@ -13,6 +13,7 @@ export type withdrawContextType = {
   setWithdraws(withdraws: Withdraw[]): void;
   updateWithdrawState: (notebookSerialNumber: string, state: boolean) => Promise<string | undefined>;
   finishWithdraw: (notebookSerialNumber: string) => Promise<string | undefined>;
+  createLaptop: (notebookSerialNumber: string) => Promise<string | undefined>;
 };
 
 const defaultWithdrawContext: withdrawContextType = {
@@ -25,7 +26,9 @@ const defaultWithdrawContext: withdrawContextType = {
   updateWithdrawState: async(notebookSerialNumber: string, state: boolean) => {
     return "";
   },
-
+  createLaptop: async(notebookSerialNumber: string) => {
+    return "";
+  },
   setWithdraws: (data: Withdraw[]) => void 0,
   withdraws: [],
 };
@@ -42,6 +45,10 @@ const updateWithdrawStateUsecase = containerWithdraw.get<UpdateWithdrawUsecase>(
 
 const finishWithdrawUsecase = containerWithdraw.get<FinishWithdrawUsecase>(
   RegistryWithdraw.FinishWithdrawUsecase
+);
+
+const createLaptopUsecase = containerWithdraw.get<FinishWithdrawUsecase>(
+  RegistryWithdraw.CreateLaptopUsecase
 );
 
 export function WithdrawContextProvider({ children }: PropsWithChildren) {
@@ -74,6 +81,15 @@ export function WithdrawContextProvider({ children }: PropsWithChildren) {
       console.error("Something went wrong with finishWithdraw: ", error);
     }
   }
+
+  async function createLaptop(notebookSerialNumber: string) {
+    try {
+      const message = await createLaptopUsecase.execute(notebookSerialNumber);
+      return message;
+    } catch (error: any) {
+      console.error("Something went wrong with createLaptop: ", error);
+    }
+  }
   return (
     <WithdrawContext.Provider
       value={{
@@ -82,6 +98,7 @@ export function WithdrawContextProvider({ children }: PropsWithChildren) {
         setWithdraws,
         updateWithdrawState,
         finishWithdraw,
+        createLaptop,
       }}
     >
       {children}

@@ -19,6 +19,7 @@ export default function Retirada(){
     const [serial, setSerial] = useState('')
     const [filter, setFilter] = useState('')
     const [typeFilter, setTypeFilter] = useState('')
+    const [typeModal, setTypeModal] = useState<'create'|'delete'>('create')
 
     const [email, setEmail] = useState('')
     const [oldPassword, setOldPassword] = useState('')
@@ -142,7 +143,8 @@ export default function Retirada(){
         }
     }
 
-    const toggleCreateLaptop = () => {
+    const toggleCreateLaptop = (type:"delete"|"create") => {
+        setTypeModal(type)
         setIsCreateLaptopOpen(!isCreateLaptopOpen)
     }
 
@@ -201,20 +203,20 @@ export default function Retirada(){
 
     return (
         <>
-            <CreateLaptopModal isOpen={isCreateLaptopOpen} onClose={toggleCreateLaptop} />
+            <CreateLaptopModal isOpen={isCreateLaptopOpen} onClose={()=>toggleCreateLaptop(typeModal)} type={typeModal} />
         <section className='h-screen bg-azul-claro flex flex-col justify-around items-center gap-4 p-4'>
             <ToastContainer position="top-center" autoClose={3000} hideProgressBar={false} newestOnTop={false} closeOnClick rtl={false} pauseOnFocusLoss draggable pauseOnHover theme="light" />
             <img src={logo} alt="Logo da NoteMaua" />
             <div className="bg-branco border-[12px] border-cinza-escuro rounded-3xl w-[80%] h-[70%] p-8">
-                <div className='flex items-center'>
+                <div className='flex justify-between items-center'>
                     <div className='flex gap-4'>
                         <button onClick={()=>Logout()} className='flex items-center gap-2 bg-red-500 px-4 py-1 rounded-lg text-white hover:bg-red-400'>Sair<FaDoorOpen/></button>
-                        <button onClick={()=>setModal(true)} className='w-32 bg-azul flex items-center gap-2 px-4 py-1 rounded-lg text-white hover:bg-blue-500'>Alterar Senha</button>
+                        {/* <button onClick={()=>setModal(true)} className='w-32 bg-azul flex items-center gap-2 px-4 py-1 rounded-lg text-white hover:bg-blue-500'>Alterar Senha</button> */}
                     </div>
-                    <div className='flex justify-center gap-4 w-full'>
+                    {/* <div className='flex justify-center gap-4 w-full'>
                         <input onChange={(e)=>setSerial(e.target.value)} className='bg-cinza-claro px-2 py-1 shadow-xl rounded-md' type="number" placeholder='Número de série' value={serial} />
                         <button type='button' className='bg-verde hover:bg-green-400 font-semibold px-6 shadow-xl py-1 rounded-md' onClick={()=>endWithdraw(serial)}>Confirmar devolução</button>
-                    </div>
+                    </div> */}
                     <div>
                         <RiRefreshFill onClick={()=>getAll()} className='text-4xl hover:cursor-pointer'/>
                     </div>
@@ -222,7 +224,7 @@ export default function Retirada(){
 
                 <div className='w-full h-[1px] mt-8 mb-2 bg-black'/>
             
-                <div className='flex justify-between my-6'>
+                <div className='flex justify-between items-center gap-2 my-6 flex-wrap'>
                     <div className='flex items-center gap-4'>
                         <input onChange={(e)=>setFilter(e.target.value)} type="text" className='bg-cinza-claro px-2 py-1 shadow-xl rounded-md' placeholder='Pesquisar'/>
                         <select onChange={(e)=>setTypeFilter(e.target.value)} className='w-32 h-8 rounded-md border-[1px] border-black text-center'>
@@ -232,7 +234,10 @@ export default function Retirada(){
                         </select>
                             <button onClick={() => filterWithdraws(filter, typeFilter)} className='text-xl'><FaSearch /></button>
                     </div>
-                        <button onClick={toggleCreateLaptop} className='h-8 px-3 flex items-center justify-center bg-red-700 text-white rounded-lg hover:bg-red-500 duration-200 hover:cursor-pointer'>Adicionar Notebook</button>
+                    <div className='flex gap-2'>
+                        <button onClick={()=>toggleCreateLaptop("create")} className='h-8 px-3 flex items-center justify-center bg-green-500 text-white rounded-lg hover:bg-green-600 duration-200 hover:cursor-pointer'>Adicionar Notebook</button>
+                        <button onClick={()=>toggleCreateLaptop("delete")} className='h-8 px-3 flex items-center justify-center bg-red-500 text-white rounded-lg hover:bg-red-600 duration-200 hover:cursor-pointer'>Deletar Notebook</button>
+                    </div>
                 </div>
 
                 <div className='relative h-[70%] overflow-y-auto'>
@@ -280,7 +285,7 @@ export default function Retirada(){
                                 </td>
                                 <td>
                                     <div className='flex justify-around rounded-lg m-1 p-4 bg-cinza-claro text-center text-lg font-bold underline'>
-                                        <FaCheckCircle className="text-2xl text-verde" />
+                                        <FaCheckCircle onClick={()=>endWithdraw(cell.notebookSerialNumber)} className="text-2xl text-verde hover:cursor-pointer" />
                                     </div>
                                 </td>
                             </tr>
