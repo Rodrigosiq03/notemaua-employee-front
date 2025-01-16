@@ -12,6 +12,7 @@ import { IoIosCloseCircle } from "react-icons/io";
 
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import CreateLaptopModal from '../../components/createLaptopModal';
 
 export default function Retirada(){
     const [modal, setModal] = useState(false)
@@ -25,6 +26,8 @@ export default function Retirada(){
 
     const { isLogged, updatePassword } = useContext(EmployeeContext)
     const { setWithdraws, getAllWithdraws, updateWithdrawState, finishWithdraw, withdraws } = useContext(WithdrawContext)
+
+    const [isCreateLaptopOpen, setIsCreateLaptopOpen] = useState(false)
 
     function filterWithdraws(filter: string, typeFilter: string, withdrawList: Withdraw[] | undefined = withdraws) {
         if(typeFilter == 'ra'){
@@ -139,6 +142,10 @@ export default function Retirada(){
         }
     }
 
+    const toggleCreateLaptop = () => {
+        setIsCreateLaptopOpen(!isCreateLaptopOpen)
+    }
+
     async function postNewPassword(email: string, oldPassword: string, newPassword: string){
         const response = await updatePassword(email, oldPassword, newPassword)
         if(response){
@@ -172,28 +179,29 @@ export default function Retirada(){
         navigate('/')
     }
 
-    function Verify(){
-        const timeNow = new Date().getTime()
-        const timeLogin = localStorage.getItem('timeLogin')
-        if(timeLogin){
-            const time = new Date(Number(timeLogin)).getTime()
-            if((timeNow - time) > (7*24*60*60*1000)){
-                localStorage.removeItem('token')
-                navigate('/')
-            }
-        }
-    }
+    // function Verify(){
+    //     const timeNow = new Date().getTime()
+    //     const timeLogin = localStorage.getItem('timeLogin')
+    //     if(timeLogin){
+    //         const time = new Date(Number(timeLogin)).getTime()
+    //         if((timeNow - time) > (7*24*60*60*1000)){
+    //             localStorage.removeItem('token')
+    //             navigate('/')
+    //         }
+    //     }
+    // }
 
     useEffect(() => {
-        const token = localStorage.getItem('token')
-        if(!isLogged && !token) navigate('/')
+        // const token = localStorage.getItem('token')
+        // if(!isLogged && !token) navigate('/')
 
-        Verify()
+        // Verify()
         getAll()
     }, [])
 
     return (
         <>
+            <CreateLaptopModal isOpen={isCreateLaptopOpen} onClose={toggleCreateLaptop} />
         <section className='h-screen bg-azul-claro flex flex-col justify-around items-center gap-4 p-4'>
             <ToastContainer position="top-center" autoClose={3000} hideProgressBar={false} newestOnTop={false} closeOnClick rtl={false} pauseOnFocusLoss draggable pauseOnHover theme="light" />
             <img src={logo} alt="Logo da NoteMaua" />
@@ -214,14 +222,17 @@ export default function Retirada(){
 
                 <div className='w-full h-[1px] mt-8 mb-2 bg-black'/>
             
-                <div className='flex items-center gap-4 my-6'>
-                    <input onChange={(e)=>setFilter(e.target.value)} type="text" className='bg-cinza-claro px-2 py-1 shadow-xl rounded-md' placeholder='Pesquisar'/>
-                    <select onChange={(e)=>setTypeFilter(e.target.value)} className='w-32 h-8 rounded-md border-[1px] border-black text-center'>
-                        <option value="">-- Escolha --</option>
-                        <option value="ra">Ra do Aluno</option>
-                        <option value="serialNumber">Número de série</option>
-                    </select>
-                    <button onClick={()=>filterWithdraws(filter, typeFilter)} className='text-xl'><FaSearch/></button>
+                <div className='flex justify-between my-6'>
+                    <div className='flex items-center gap-4'>
+                        <input onChange={(e)=>setFilter(e.target.value)} type="text" className='bg-cinza-claro px-2 py-1 shadow-xl rounded-md' placeholder='Pesquisar'/>
+                        <select onChange={(e)=>setTypeFilter(e.target.value)} className='w-32 h-8 rounded-md border-[1px] border-black text-center'>
+                            <option value="">-- Escolha --</option>
+                            <option value="ra">Ra do Aluno</option>
+                            <option value="serialNumber">Número de série</option>
+                        </select>
+                            <button onClick={() => filterWithdraws(filter, typeFilter)} className='text-xl'><FaSearch /></button>
+                    </div>
+                        <button onClick={toggleCreateLaptop} className='h-8 px-3 flex items-center justify-center bg-red-700 text-white rounded-lg hover:bg-red-500 duration-200 hover:cursor-pointer'>Adicionar Notebook</button>
                 </div>
 
                 <div className='relative h-[70%] overflow-y-auto'>

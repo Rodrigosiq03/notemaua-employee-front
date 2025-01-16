@@ -86,6 +86,30 @@ export class WithdrawRepositoryHttp implements IWithdrawRepository {
     } catch(error: any){
       throw new Error(error);
     }
+  } 
+
+  // N foi implementado no front
+  async createLaptop(serialNumber: string): Promise<string> {
+    try {
+      const token = localStorage.getItem("token");
+      const response = await this.httpWithdraw.post<string>(
+        "/create-notebook",
+        {
+          serialNumber,
+        },
+        {
+          headers: {
+            Authorization: "Bearer " + token,
+          },
+        }
+      );
+      if(response.status === 200) {
+        return response.data;
+      }
+      throw new Error("Error creating laptop");
+    } catch(error: any){
+      throw new Error(error);
+    }
   }
 }
 
