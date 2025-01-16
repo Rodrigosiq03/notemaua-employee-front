@@ -8,6 +8,7 @@ import { STAGE } from "../../domain/enums/stage_enum";
 import { UpdateWithdrawUsecase } from "../../../modules/withdraw/usecases/update_withdraw_state_usecase";
 import { FinishWithdrawUsecase } from "../../../modules/withdraw/usecases/finish_withdraw_usecase";
 import { CreateLaptopUsecase } from "../../../modules/withdraw/usecases/create_laptop_usecase";
+import { DeleteLaptopUsecase } from "../../../modules/withdraw/usecases/delete_laptop_usecase";
 
 export const RegistryWithdraw = {
   AxiosAdapter: Symbol.for("AxiosAdapter"),
@@ -17,6 +18,7 @@ export const RegistryWithdraw = {
   UpdateWithdrawStateUsecase: Symbol.for("UpdateWithdrawStateUsecase"),
   FinishWithdrawUsecase: Symbol.for("FinishWithdrawUsecase"),
   CreateLaptopUsecase: Symbol.for("CreateLaptopUsecase"),
+  DeleteLaptopUsecase: Symbol.for("DeleteLaptopUsecase"),
 };
 
 export const containerWithdraw = new Container();
@@ -105,6 +107,25 @@ containerWithdraw
       import.meta.env.VITE_STAGE === STAGE.DEV
     ) {
       return new CreateLaptopUsecase(
+        context.container.get(RegistryWithdraw.WithdrawRepositoryHttp)
+      )
+    } else {
+      throw new Error("Invalid stage");
+    }
+  });
+
+containerWithdraw
+  .bind(RegistryWithdraw.DeleteLaptopUsecase)
+  .toDynamicValue((context) => {
+    if (import.meta.env.VITE_STAGE === STAGE.TEST) {
+      return new DeleteLaptopUsecase(
+        context.container.get(RegistryWithdraw.WithdrawRepositoryMock)
+      )
+    } else if (
+      import.meta.env.VITE_STAGE === STAGE.PROD ||
+      import.meta.env.VITE_STAGE === STAGE.DEV
+    ) {
+      return new DeleteLaptopUsecase(
         context.container.get(RegistryWithdraw.WithdrawRepositoryHttp)
       )
     } else {

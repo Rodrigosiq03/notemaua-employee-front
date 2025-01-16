@@ -11,7 +11,7 @@ export default function CreateLaptopModal({ isOpen, onClose, type }: CreateLapto
   const [serialNumber, setSerialNumber] = useState<string>("");
   const [isVisible, setIsVisible] = useState<boolean>(true);
 
-  const { createLaptop } = useContext(WithdrawContext);
+  const { createLaptop, deleteLaptop } = useContext(WithdrawContext);
 
   useEffect(() => {
     if (isOpen) {
@@ -33,8 +33,8 @@ export default function CreateLaptopModal({ isOpen, onClose, type }: CreateLapto
       await createLaptop(serialNumber);
       onClose();
     } else if (type === "delete") {
-      // Implementação da remoção
-      alert("delete")
+      await deleteLaptop(serialNumber);
+      onClose();
     }
   };
 

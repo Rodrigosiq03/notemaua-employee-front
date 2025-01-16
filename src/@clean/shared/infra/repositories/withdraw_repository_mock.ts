@@ -53,6 +53,10 @@ export class WithdrawRepositoryMock implements IWithdrawRepository {
   async createLaptop(notebookSerialNumber: string): Promise<string> {
     throw new Error("Method not implemented.");      
   }
+
+  async deleteLaptop(notebookSerialNumber: string): Promise<string> {
+    throw new Error("Method not implemented.");
+  }
 }
 
 decorate(injectable(), WithdrawRepositoryMock);

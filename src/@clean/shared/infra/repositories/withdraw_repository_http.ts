@@ -111,6 +111,28 @@ export class WithdrawRepositoryHttp implements IWithdrawRepository {
       throw new Error(error);
     }
   }
-}
 
+  async deleteLaptop(notebookSerialNumber: string): Promise<string> {
+    try {
+      const token = localStorage.getItem("token");
+      const response = await this.httpWithdraw.post<string>(
+        "/delete-notebook",
+        {
+          "notebookSerialNumber": notebookSerialNumber,
+        },
+        {
+          headers: {
+            Authorization: "Bearer " + token,
+          },
+        }
+      );
+      if(response.status === 200) {
+        return response.data;
+      }
+      throw new Error("Error deleting laptop");
+    } catch (error: any) {
+      throw new Error(error)
+    }
+  }
+}
 decorate(injectable(), WithdrawRepositoryHttp);
