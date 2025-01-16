@@ -4,12 +4,14 @@ import Login from './pages/Login'
 import EsqueciSenha from './pages/ForgotPassword'
 import Retirada from './pages/Withdraw'
 import RedefinirSenha from './pages/ChangePassword'
+import MicrosoftLogin from './pages/MicrosoftLogin'
 
 function App() {
   return (
     <Router>
       <Routes>
         <Route path='/' element={<Login/>}/>
+        <Route path='/Microsoft' element={<MicrosoftLogin/>}/>
         <Route path='/ForgotPassword' element={<EsqueciSenha/>}/>
         <Route path='/Withdraw' element={<Retirada/>}/>
         <Route path='/ChangePassword' element={<RedefinirSenha/>}/> 
