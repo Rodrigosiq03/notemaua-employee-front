@@ -11,7 +11,7 @@ const msalConfig = {
   auth: {
     clientId: 'e4319f55-1c54-4a98-b605-c0573732be8e',
     authority: 'https://login.microsoftonline.com/common',
-    redirectUri: 'http://localhost:3000',
+    redirectUri: 'https://dev.d2znmwvrcndbeo.amplifyapp.com',
   },
   cache: {
     cacheLocation: 'localStorage',
