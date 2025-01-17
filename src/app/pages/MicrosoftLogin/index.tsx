@@ -3,9 +3,12 @@ import logoMaua from '../../assets/LogoMaua.png'
 import microsoftLogo from '../../assets/microsoftLogo.jpg'
 import { ToastContainer, toast } from "react-toastify";
 import { useMsal } from '@azure/msal-react';
+import { useContext } from 'react';
+import { AuthContext } from '../../context/auth_context';
 
 export default function MicrosoftLogin() {
   const { instance } = useMsal(); // Obtém a instância do MSAL do contexto
+  const { createUserOAuth } = useContext(AuthContext)
 
   const loginRequest = {
     scopes: ['openid', 'profile', 'email', 'offline_access', 'User.Read'],
@@ -14,6 +17,12 @@ export default function MicrosoftLogin() {
   const handleLogin = async () => {
     try {
       const response = await instance.loginPopup(loginRequest);
+      const accessToken = response.accessToken;
+      const backendToken = await createUserOAuth(accessToken);
+      if (!backendToken) {
+        toast.error("Login failed!");
+        throw new Error("Login failed")
+      }
       toast.success(`Welcome, ${response.account.username}!`);
       console.log(response);
     } catch (error) {

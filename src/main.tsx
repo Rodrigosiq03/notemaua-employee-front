@@ -2,7 +2,7 @@ import React from "react";
 import ReactDOM from "react-dom/client";
 import App from "./app/App.tsx";
 import "./app/index.css";
-import { EmployeeContextProvider } from "./app/context/employee_context.tsx";
+import { AuthContextProvider } from "./app/context/auth_context.tsx";
 import { WithdrawContextProvider } from "./app/context/withdraw_context.tsx";
 import { MsalProvider } from "@azure/msal-react";
 import { PublicClientApplication } from "@azure/msal-browser";
@@ -25,12 +25,12 @@ const msalInstance = new PublicClientApplication(msalConfig)
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
-    <EmployeeContextProvider>
+    <AuthContextProvider>
       <WithdrawContextProvider>
         <MsalProvider instance={msalInstance}>
           <App />
         </MsalProvider>
       </WithdrawContextProvider>
-    </EmployeeContextProvider>
+    </AuthContextProvider>
   </React.StrictMode>
 );

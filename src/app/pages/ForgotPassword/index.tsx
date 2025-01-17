@@ -3,7 +3,7 @@ import logoMaua from '../../assets/LogoMaua.png'
 import { Link, useNavigate } from 'react-router-dom'
 import { IoExitOutline } from 'react-icons/io5'
 import { useContext, useState } from 'react'
-import { EmployeeContext } from '../../context/employee_context'
+import { EmployeeContext } from '../../context/auth_context'
 import { IoMdClose } from "react-icons/io";
 
 import 'react-toastify/dist/ReactToastify.css';

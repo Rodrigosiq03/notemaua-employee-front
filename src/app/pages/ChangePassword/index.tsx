@@ -7,7 +7,7 @@ import { useContext, useState } from 'react';
 
 import 'react-toastify/dist/ReactToastify.css';
 import { ToastContainer, toast } from 'react-toastify';
-import { EmployeeContext } from '../../context/employee_context';
+import { EmployeeContext } from '../../context/auth_context';
 
 export default function RedefinirSenha(){
     const [senha, setSenha] = useState('')
