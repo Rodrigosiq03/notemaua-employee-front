@@ -4,28 +4,20 @@ import { FaSearch, FaCheckCircle, FaDoorOpen } from 'react-icons/fa'
 import { GoXCircleFill } from "react-icons/go";
 import { RiRefreshFill } from "react-icons/ri";
 import { useContext, useEffect, useState } from 'react'
-import { EmployeeContext } from '../../context/auth_context';
 import { useNavigate } from 'react-router-dom';
 import { WithdrawContext } from '../../context/withdraw_context';
 import { Withdraw } from '../../../@clean/shared/domain/entities/withdraw';
-import { IoIosCloseCircle } from "react-icons/io";
 
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import CreateLaptopModal from '../../components/createLaptopModal';
 
 export default function Retirada(){
-    const [modal, setModal] = useState(false)
     const [serial, setSerial] = useState('')
     const [filter, setFilter] = useState('')
     const [typeFilter, setTypeFilter] = useState('')
     const [typeModal, setTypeModal] = useState<'create'|'delete'>('create')
 
-    const [email, setEmail] = useState('')
-    const [oldPassword, setOldPassword] = useState('')
-    const [newPassword, setNewPassword] = useState('')
-
-    const { isLogged, updatePassword } = useContext(EmployeeContext)
     const { setWithdraws, getAllWithdraws, updateWithdrawState, finishWithdraw, withdraws } = useContext(WithdrawContext)
 
     const [isCreateLaptopOpen, setIsCreateLaptopOpen] = useState(false)
@@ -146,34 +138,6 @@ export default function Retirada(){
     const toggleCreateLaptop = (type:"delete"|"create") => {
         setTypeModal(type)
         setIsCreateLaptopOpen(!isCreateLaptopOpen)
-    }
-
-    async function postNewPassword(email: string, oldPassword: string, newPassword: string){
-        const response = await updatePassword(email, oldPassword, newPassword)
-        if(response){
-            setModal(false)
-            return toast.success("Senha alterada com sucesso", {
-                position: "top-center",
-                autoClose: 3000,
-                hideProgressBar: false,
-                closeOnClick: true,
-                pauseOnHover: true,
-                draggable: true,
-                progress: undefined,
-                theme: "light"
-            });
-        }else{
-            return toast.error("Erro ao alterar senha", {
-                position: "top-center",
-                autoClose: 3000,
-                hideProgressBar: false,
-                closeOnClick: true,
-                pauseOnHover: true,
-                draggable: true,
-                progress: undefined,
-                theme: "light"
-            });
-        }
     }
 
     function Logout(){
@@ -333,40 +297,6 @@ export default function Retirada(){
             </div>
             <img src={logoMaua} alt="Logo da NoteMaua" />
         </section>
-
-        {/* <!-- Main modal --> */}
-        <div id="default-modal" tabIndex={-1} aria-hidden="true" className={`${modal ? "" : "hidden"} bg-[rgba(0,0,0,0.5)] overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-full`}>
-            <div className="relative top-[25%] left-[35%] p-4 w-full max-w-lg max-h-full">
-                {/* <!-- Modal content --> */}
-                <div className="relative bg-branco rounded-xl shadow border-[12px] border-cinza-escuro p-8">
-                    {/* <!-- Modal header --> */}
-                    <div className='flex items-center justify-between mb-8'>
-                        <h3 className="text-2xl font-bold text-center">Alterar Senha</h3>
-                        <IoIosCloseCircle onClick={()=>setModal(false)} className='cursor-pointer' size={24}/>
-                    </div>
-                    {/* <!-- Modal body --> */}
-                    <div className="flex flex-col gap-8">
-                        <div className='flex flex-col'>
-                            <label className='text-md'>Email</label>
-                            <input onChange={(e)=>setEmail(e.target.value)} className="bg-gray-400 shadow-2xl p-2 rounded-xl" type="text" />
-                        </div>
-                        <div className='flex flex-col'>
-                            <label className='text-md'>Antiga Senha</label>
-                            <input onChange={(e) => setOldPassword(e.target.value)} className="bg-gray-400 shadow-2xl p-2 rounded-xl" type="password" />
-                        </div>
-                        <div className='flex flex-col'>
-                            <label className='text-md'>Nova Senha</label>
-                            <input onChange={(e)=>setNewPassword(e.target.value)} className="bg-gray-400 shadow-2xl p-2 rounded-xl" type="password" />
-                        </div>
-                    </div>
-                    {/* <!-- Modal footer --> */}
-                    <div className="flex justify-center items-center p-4 md:p-5">
-                        <button type='button' className='bg-azul text-white font-semibold px-6 shadow-xl py-1 rounded-md' onClick={()=>postNewPassword(email, oldPassword, newPassword)}>Alterar Senha</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-
         </>
     )
 }
