@@ -3,7 +3,7 @@ import logoMaua from '../../assets/LogoMaua.png'
 import microsoftLogo from '../../assets/microsoftLogo.jpg'
 import { ToastContainer, toast } from "react-toastify";
 import { useMsal } from '@azure/msal-react';
-import { useContext, useEffect } from 'react';
+import { useContext } from 'react';
 import { AuthContext } from '../../context/auth_context';
 
 export default function MicrosoftLogin() {
@@ -16,32 +16,23 @@ export default function MicrosoftLogin() {
 
   const handleLogin = async () => {
     try {
-      await instance.loginPopup(loginRequest);
+      const response = await instance.loginPopup(loginRequest);
+
+      console.log(response);
       
+      const accessToken = response.accessToken;
+      const backendToken = await createUserOAuth(accessToken);
+      if (!backendToken) {
+        toast.error("Login failed!");
+        throw new Error("Login failed")
+      }
+      toast.success(`Welcome, ${response.account.username}!`);
+      console.log(response);
     } catch (error) {
       toast.error("Login failed!");
       console.error(error);
     }
   };
-
-
-  useEffect(() => {
-    async function handleRedirectPromise() {
-      const result = await instance.handleRedirectPromise()
-      if (result) {
-        const accessToken = result.accessToken;
-        const backendToken = await createUserOAuth(accessToken);
-        if (!backendToken) {
-          toast.error("Login failed!");
-          throw new Error("Login failed")
-        }
-        toast.success(`Welcome, ${result.account.username}!`);
-        console.log(result);
-      }
-    }
-    handleRedirectPromise()
-  }, [instance, createUserOAuth])
-
 
   return (
     <section className='h-screen bg-azul-claro flex flex-col'>
