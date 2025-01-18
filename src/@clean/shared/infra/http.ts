@@ -5,5 +5,5 @@ export const httpAuth = axios.create({
 });
 
 export const httpWithdraw = axios.create({
-  baseURL: import.meta.env.VITE_API_WITHDRAW,
+  baseURL: import.meta.env.	VITE_API_URL_WITHDRAW,
 });
