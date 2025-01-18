@@ -5,6 +5,7 @@ import { ToastContainer, toast } from "react-toastify";
 import { useMsal } from '@azure/msal-react';
 import { useContext } from 'react';
 import { AuthContext } from '../../context/auth_context';
+import { useNavigate } from 'react-router-dom';
 
 export default function MicrosoftLogin() {
   const { instance } = useMsal(); // Obtém a instância do MSAL do contexto
@@ -13,6 +14,8 @@ export default function MicrosoftLogin() {
   const loginRequest = {
     scopes: ['openid', 'profile', 'email', 'offline_access', 'User.Read'],
   };
+  
+  const navigate = useNavigate()
 
   const handleLogin = async () => {
     try {
@@ -28,6 +31,10 @@ export default function MicrosoftLogin() {
       }
       toast.success(`Welcome, ${response.account.username}!`);
       console.log(response);
+
+      navigate('/Withdraw')
+
+
     } catch (error) {
       toast.error("Login failed!");
       console.error(error);
