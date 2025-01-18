@@ -1,6 +1,6 @@
 import 'reflect-metadata'
 import { Container } from 'inversify' 
-import { httpEmployee } from '../http' 
+import { httpAuth } from '../http' 
 import { AuthRepositoryMock } from '../repositories/auth_repository_mock' 
 import { AuthRepositoryHttp } from '../repositories/auth_repository_http'
 import { STAGE } from '../../domain/enums/stage_enum'
@@ -16,7 +16,7 @@ export const RegistryAuth = {
 
 export const containerAuth = new Container()
 
-containerAuth.bind(RegistryAuth.AxiosAdapter).toConstantValue(httpEmployee)
+containerAuth.bind(RegistryAuth.AxiosAdapter).toConstantValue(httpAuth)
 
 containerAuth.bind(RegistryAuth.AuthRepositoryMock)
   .to(AuthRepositoryMock)
