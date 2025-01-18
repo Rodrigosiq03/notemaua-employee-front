@@ -7,7 +7,12 @@ export class AuthRepositoryHttp implements IAuthRepository {
 
   async createUserOAuth(accessToken: string): Promise<string> {
       try {
-        const response = await this.httpAuth.post<{ token: string }>('/create-user-oauth', { accessToken })
+        console.log('accessToken Auth Repository', accessToken)
+        const response = await this.httpAuth.post<{ token: string }>('/create-user-oauth', undefined, {
+          headers: {
+            Authorization: `Bearer ${accessToken}`
+          }
+        })
         return response.data.token
       } catch(error: any) {
         throw new Error(error)

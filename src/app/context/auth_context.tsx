@@ -31,6 +31,7 @@ export function AuthContextProvider({ children }: PropsWithChildren) {
 
   async function createUserOAuth(accessToken: string): Promise<string | undefined> {
     try {
+      console.log('accessToken Auth COntext', accessToken)
       const token = await createUserOAuthUsecase.execute(accessToken)
       return token
     } catch (error: any) {
