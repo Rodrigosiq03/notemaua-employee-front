@@ -33,6 +33,7 @@ export function AuthContextProvider({ children }: PropsWithChildren) {
     try {
       console.log('accessToken Auth COntext', accessToken)
       const token = await createUserOAuthUsecase.execute(accessToken)
+      localStorage.setItem('token', token)
       return token
     } catch (error: any) {
       console.error(error)
