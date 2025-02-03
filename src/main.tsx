@@ -9,8 +9,8 @@ import { PublicClientApplication } from "@azure/msal-browser";
 
 const msalConfig = {
   auth: {
-    clientId: 'e4319f55-1c54-4a98-b605-c0573732be8e',
-    authority: 'https://login.microsoftonline.com/common',
+    clientId: 'c49e1939-4b53-4738-bb64-41fb2990e41c',
+    authority: 'https://login.microsoftonline.com/c49e1939-4b53-4738-bb64-41fb2990e41c/oauth2/v2.0/authorize',
     redirectUri: 'https://dev.d2znmwvrcndbeo.amplifyapp.com',
   },
   cache: {
